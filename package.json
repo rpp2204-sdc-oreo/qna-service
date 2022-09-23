@@ -1,0 +1,22 @@
+{
+  "name": "qna-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "qna.test.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpp2204-sdc-oreo/qna-service.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rpp2204-sdc-oreo/qna-service/issues"
+  },
+  "homepage": "https://github.com/rpp2204-sdc-oreo/qna-service#readme",
+  "dependencies": {
+    "jest": "^29.0.3"
+  }
+}
