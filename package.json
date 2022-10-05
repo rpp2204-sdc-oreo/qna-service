@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/rpp2204-sdc-oreo/qna-service#readme",
   "dependencies": {
-    "jest": "^29.0.3"
+    "dotenv": "^16.0.3",
+    "jest": "^29.0.3",
+    "pg": "^8.8.0"
   }
 }
