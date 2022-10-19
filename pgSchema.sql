@@ -8,35 +8,31 @@
 
 /*Create the tables in the database. May need to copy/paste these individually into psql
   in order to create the tables*/
-CREATE TABLE IF NOT EXISTS products (
-  id SERIAL PRIMARY KEY,
-  product_id TEXT NOT NULL
-);
 
 CREATE TABLE IF NOT EXISTS questions (
   id SERIAL PRIMARY KEY,
-  product_id INTEGER REFERENCES products (id),
-  question_id TEXT NOT NULL,
-  asker_name VARCHAR(50) NOT NULL,
+  product_id INTEGER NOT NULL,
   question_body TEXT NOT NULL,
-  question_date TIMESTAMP NOT NULL,
-  helpfulness INTEGER NOT NULL,
-  reported BOOLEAN NOT NULL
+  question_date BIGINT NOT NULL,
+  asker_name VARCHAR(50) NOT NULL,
+  asker_email TEXT NOT NULL,
+  reported BOOLEAN NOT NULL,
+  helpfulness INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS answers (
   id SERIAL PRIMARY KEY,
   question_id INTEGER REFERENCES questions (id),
-  answer_id TEXT NOT NULL,
-  answerer_name VARCHAR(50) NOT NULL,
-  answer_body TEXT NOT NULL,
-  answer_date TIMESTAMP NOT NULL,
-  reported BOOLEAN NOT NULL
+  body TEXT NOT NULL,
+  answer_date BIGINT NOT NULL,
+  answer_name VARCHAR(50) NOT NULL,
+  answer_email TEXT NOT NULL,
+  reported BOOLEAN NOT NULL,
+  helpfulness INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS photos (
   id SERIAL UNIQUE,
-  photo_id TEXT NOT NULL,
   answer_id INTEGER REFERENCES answers (id),
   link TEXT NOT NULL
 );
