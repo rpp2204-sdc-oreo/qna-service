@@ -1,8 +1,10 @@
 const db = require('./db.js');
 
+/* In order to get the INSERT queries to work. After all of the data has been loaded into the database. Make sure that you run the following command to set the id to the max. "select setval('tableName_id_seq', (select max(id) from tableName));"; otherwise, there will be a problem with overlapping primary keys and all inserts will fail until it reaches the next new number in the sequence of primary keys. This is caused by adding to the database without using the insert statement and also restarts with each new session.*/
+
 module.exports = {
   getQuestions: (params, cb) => {
-    db.query('TODO', params, (err, res) => {
+    db.query('SELECT * FROM questions WHERE product_id = $1', params, (err, res) => {
       if (err) {
         console.log('ERROR in getQuestions:', err);
         return cb(err, null);
@@ -12,7 +14,7 @@ module.exports = {
     });
   },
   getAnswers: (params, cb) => {
-    db.query('TODO', params, (err, res) => {
+    db.query('SELECT * FROM answers WHERE question_id = $1', params, (err, res) => {
       if (err) {
         console.log('ERROR in getAnswers:', err);
         return cb(err, null);
@@ -22,7 +24,7 @@ module.exports = {
     });
   },
   getPhotos: (params, cb) => {
-    db.query('TODO', params, (err, res) => {
+    db.query('SELECT * from photos WHERE answer_id = $1', params, (err, res) => {
       if (err) {
         console.log('ERROR in getPhotos:', err);
         return cb(err, null);
@@ -42,7 +44,7 @@ module.exports = {
     });
   },
   addAnswer: (params, cb) => {
-    db.query('INSERT INTO answers(question_id, body, answer_date, answer_name, answer_email, reported, helpfulness) VALUES($1, $2, $3, $4, $5, $6, $7)', params, (err, res) => {
+    db.query('INSERT INTO answers(question_id, body, answer_date, answer_name, answer_email, reported, helpful) VALUES($1, $2, $3, $4, $5, $6, $7)', params, (err, res) => {
       if (err) {
         console.log('ERROR in addAnswer:', err);
         return cb(err, null);
@@ -61,7 +63,7 @@ module.exports = {
     });
   },
   qHelpful: (params, cb) => {
-    db.query('UPDATE questions SET helpfulness = helpfullness + 1 WHERE id = $1', params, (err, res) => {
+    db.query('UPDATE questions SET helpfulness = helpfulness + 1 WHERE id = $1', params, (err, res) => {
       if (err) {
         console.log('ERROR in qHelpful:', err);
         return cb(err, null);
@@ -71,7 +73,7 @@ module.exports = {
     });
   },
   qReport: (params, cb) => {
-    db.query('UPDATE questions SET reported = 1 WHERE id = $1', params, (err, res) => {
+    db.query('UPDATE questions SET reported = true WHERE id = $1', params, (err, res) => {
       if (err) {
         console.log('ERROR in qReport:', err);
         return cb(err, null);
@@ -91,7 +93,7 @@ module.exports = {
     });
   },
   aReport: (params, cb) => {
-    db.query('UPDATE answers SET reported = 1 WHERE id = $1', params, (err, res) => {
+    db.query('UPDATE answers SET reported = true WHERE id = $1', params, (err, res) => {
       if (err) {
         console.log('ERROR in aReport:', err);
         return cb(err, null);
