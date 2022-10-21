@@ -21,8 +21,18 @@ module.exports = {
       }
     });
   },
+  getPhotos: (params, cb) => {
+    db.query('TODO', params, (err, res) => {
+      if (err) {
+        console.log('ERROR in getPhotos:', err);
+        return cb(err, null);
+      } else {
+        return cb(null, res);
+      }
+    });
+  },
   addQuestion: (params, cb) => {
-    db.query('INSERT INTO questions(id, product_id, question_body, question_date, asker_name, asker_email, reported, helpfulness) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', params, (err, res) => {
+    db.query('INSERT INTO questions(product_id, question_body, question_date, asker_name, asker_email, reported, helpfulness) VALUES($1, $2, $3, $4, $5, $6, $7)', params, (err, res) => {
       if (err) {
         console.log('ERROR in addQuestion:', err);
         return cb(err, null);
@@ -32,7 +42,7 @@ module.exports = {
     });
   },
   addAnswer: (params, cb) => {
-    db.query('INSERT INTO answers(id, question_id, body, answer_date, answer_name, answer_email, reported, helpfulness) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', params, (err, res) => {
+    db.query('INSERT INTO answers(question_id, body, answer_date, answer_name, answer_email, reported, helpfulness) VALUES($1, $2, $3, $4, $5, $6, $7)', params, (err, res) => {
       if (err) {
         console.log('ERROR in addAnswer:', err);
         return cb(err, null);
@@ -42,7 +52,7 @@ module.exports = {
     });
   },
   addPhoto: (params, cb) => {
-    db.query('INSERT INTO photos(id, answer_id, link) VALUES ($1, $2, $3)', params, (err, res) => {
+    db.query('INSERT INTO photos(answer_id, link) VALUES ($1, $2)', params, (err, res) => {
       if (err) {
         console.log('ERROR in addPhoto:', err);
       } else {
@@ -51,7 +61,7 @@ module.exports = {
     });
   },
   qHelpful: (params, cb) => {
-    db.query('TODO', params, (err, res) => {
+    db.query('UPDATE questions SET helpfulness = helpfullness + 1 WHERE id = $1', params, (err, res) => {
       if (err) {
         console.log('ERROR in qHelpful:', err);
         return cb(err, null);
@@ -61,7 +71,7 @@ module.exports = {
     });
   },
   qReport: (params, cb) => {
-    db.query('TODO', params, (err, res) => {
+    db.query('UPDATE questions SET reported = 1 WHERE id = $1', params, (err, res) => {
       if (err) {
         console.log('ERROR in qReport:', err);
         return cb(err, null);
@@ -71,7 +81,7 @@ module.exports = {
     });
   },
   aHelpful: (params, cb) => {
-    db.query('TODO', params, (err, res) => {
+    db.query('UPDATE answers SET helpful = helpful + 1 WHERE id = $1', params, (err, res) => {
       if (err) {
         console.log('ERROR in aHelpful:', err);
         return cb(err, null);
@@ -81,7 +91,7 @@ module.exports = {
     });
   },
   aReport: (params, cb) => {
-    db.query('TODO', params, (err, res) => {
+    db.query('UPDATE answers SET reported = 1 WHERE id = $1', params, (err, res) => {
       if (err) {
         console.log('ERROR in aReport:', err);
         return cb(err, null);
