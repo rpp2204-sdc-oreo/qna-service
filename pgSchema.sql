@@ -12,27 +12,27 @@
 CREATE TABLE IF NOT EXISTS questions (
   id SERIAL PRIMARY KEY,
   product_id INTEGER NOT NULL,
-  question_body TEXT NOT NULL,
-  question_date BIGINT NOT NULL,
+  body TEXT NOT NULL,
+  date_written BIGINT NOT NULL,
   asker_name VARCHAR(50) NOT NULL,
   asker_email TEXT NOT NULL,
   reported BOOLEAN NOT NULL,
-  helpfulness INTEGER NOT NULL
+  helpful INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS answers (
   id SERIAL PRIMARY KEY,
   question_id INTEGER REFERENCES questions (id),
   body TEXT NOT NULL,
-  answer_date BIGINT NOT NULL,
-  answer_name VARCHAR(50) NOT NULL,
-  answer_email TEXT NOT NULL,
+  date_written BIGINT NOT NULL,
+  answerer_name VARCHAR(50) NOT NULL,
+  answerer_email TEXT NOT NULL,
   reported BOOLEAN NOT NULL,
-  helpfulness INTEGER NOT NULL
+  helpful INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS photos (
   id SERIAL UNIQUE,
   answer_id INTEGER REFERENCES answers (id),
-  link TEXT NOT NULL
+  url TEXT NOT NULL
 );

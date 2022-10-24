@@ -4,7 +4,8 @@
   "description": "",
   "main": "qna.test.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "nodemon ./server/index.js"
   },
   "repository": {
     "type": "git",
