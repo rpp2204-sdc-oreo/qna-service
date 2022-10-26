@@ -36,3 +36,14 @@ CREATE TABLE IF NOT EXISTS photos (
   answer_id INTEGER REFERENCES answers (id),
   url TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS test (
+  id SERIAL UNIQUE,
+  answer_id INTEGER,
+  url TEXT
+);
+
+\copy test(id, answer_id, url)
+from 'C:\Users\firef\Documents\answers_photos.csv'
+DELIMITER ','
+CSV HEADER;

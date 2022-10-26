@@ -24,11 +24,16 @@ app.get('/questions/:id', async (req, res) => {
     let array = questions.map((question) => {
       return new Promise((resolve, reject) => {
         // Do a search for the answers
-        controller.getAnswers([question.id], (err, result) => {
+        controller.getAnswers([question.question_id], (err, result) => {
           if (err) {
             reject(err);
           } else {
-            question.answers = result.rows;
+            question.question_date = new Date(question.question_date);
+            question.answers = {};
+            for (let i = 0; i < result.rows.length; i++) {
+              let answer = result.rows[i];
+              question.answers[answer.id] = answer;
+            }
             resolve(result.rows);
           }
         });
@@ -40,6 +45,7 @@ app.get('/questions/:id', async (req, res) => {
               if (err) {
                 reject(err);
               } else {
+                answer.date = new Date(answer.date);
                 answer.photos = result.rows;
                 resolve();
               }
@@ -56,7 +62,8 @@ app.get('/questions/:id', async (req, res) => {
   }).catch((err) => {
     res.status(404).send(err);
   });
-  res.send(data);
+  let retVal = {"product_id": req.params.id, "results": data};
+  res.send(retVal);
 });
 
 app.get('/answers/:id', async (req, res) => {
@@ -91,13 +98,14 @@ app.get('/answers/:id', async (req, res) => {
   }).catch((err) => {
     res.status(404).send(err);
   });
-  res.send(data);
+  let retVal = {"question": req.params.id, "results": data};
+  res.send(retVal);
 });
 
 app.post('/questions', (req, res) => {
   //TODO: Add a question to the db, needs product id\
   let body = req.body;
-  let params = [];
+  let params = [body.product_id, body.body, Date.now(), body.name, body.email];
   controller.addQuestion(params, (err, result) => {
     if (err) {
       res.status(400).send(err);
@@ -108,16 +116,37 @@ app.post('/questions', (req, res) => {
   });
 });
 
-app.post('/answers', (req, res) => {
+app.post('/answers/:id', (req, res) => {
   //TODO: Add an answer to the db, needs question id
   let body = req.body;
-  let params = [];
+  console.log(body);
+  let params = [req.params.id, body.body, Date.now(), body.name, body.email];
   controller.addAnswer(params, (err, result) => {
     if (err) {
       res.status(400).send(err);
     } else {
-      console.log('Added a new answer', result);
-      res.status(201).send(result);
+      console.log('Added a new answer');
+      // If the answer is added this loop takes the id and uses it to add the photos
+      let failed = false;
+      let error = null;
+      for (let i = 0; i < body.photos.length; i++) {
+        if (failed) {
+          continue;
+        }
+        controller.addPhoto([result.rows[0].id,body.photos[i]], (err, result) => {
+          if (err) {
+            failed = true;
+            error = err;
+          } else {
+            console.log('Added a new photo');
+          }
+        });
+      }
+      if (failed) {
+        res.status(400).send(err);
+      } else {
+        res.sendStatus(201);
+      }
     }
   });
 });
