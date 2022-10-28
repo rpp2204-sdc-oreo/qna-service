@@ -43,7 +43,14 @@ CREATE TABLE IF NOT EXISTS test (
   url TEXT
 );
 
-\copy test(id, answer_id, url)
-from 'C:\Users\firef\Documents\answers_photos.csv'
-DELIMITER ','
-CSV HEADER;
+/*Use this exact format in order to copy a file to the database when running this. NOTE: Keep it all on one line.*/
+\copy test FROM './ETL/data/test_photos.csv' DELIMITER ',' CSV HEADER;
+/*Copy commands to load all of the csv files into their databases*/
+\copy questions FROM './ETL/data/questions.csv' DELIMITER ',' CSV HEADER;
+\copy answers FROM './ETL/data/answers.csv' DELIMITER ',' CSV HEADER;
+\copy photos FROM './ETL/data/answers_photos.csv' DELIMITER ',' CSV HEADER;
+
+/*Indexing commands for quick search*/
+CREATE INDEX pid_index ON questions USING HASH (product_id);
+CREATE INDEX qid_index ON answers USING HASH (question_id);
+CREATE INDEX aid_index ON photos USING HASH (answer_id);
