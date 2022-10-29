@@ -1,7 +1,7 @@
 /*Basic schema for the qna service. You should be able to run this in the terminal to
   automatically setup the tables in the database.*/
 
-/*NOTE: Currently can't find a method to run this file and need to look into it more.*/
+/*NOTE: To run this file copy the following command. 'sudo -u postgres psql -d qna -a -f filepath.sql'*/
 
 /*Select Database*/
 \c qna;
