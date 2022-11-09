@@ -6,9 +6,24 @@ const controller = require('./controller.js');
 
 const app = express();
 
+// Middleware for the get for questions.
+let checkCache = (req, res, next) => {
+  let id = req.params.id;
+
+  controller.checkCache(id, (err, data) => {
+    if (err) {
+      console.log('ERROR CHECKING CACHE:', err);
+    } else if (data !== null) {
+      res.send(data);
+    } else {
+      next();
+    }
+  });
+};
+
 app.use(express.json());
 
-app.get('/questions/:id', async (req, res) => {
+app.get('/questions/:id', checkCache , async (req, res) => {
   // data is the array of questions that will be sent to the client
   let data = await new Promise((resolve, reject) => {
     // Do a search for the questions
@@ -63,6 +78,11 @@ app.get('/questions/:id', async (req, res) => {
     res.status(404).send(err);
   });
   let retVal = {"product_id": req.params.id, "results": data};
+  controller.cache(req.params.id, retVal, (err) => {
+    if (err) {
+      console.log('ERROR CACHING:', err);
+    }
+  })
   res.send(retVal);
 });
 

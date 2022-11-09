@@ -1,4 +1,5 @@
 const db = require('./db.js');
+const redis = require('./redis.js');
 
 /* In order to get the INSERT queries to work. After all of the data has been loaded into the database. Make sure that you run the following command to set the id to the max. "select setval('tableName_id_seq', (select max(id) from tableName));"; otherwise, there will be a problem with overlapping primary keys and all inserts will fail until it reaches the next new number in the sequence of primary keys. This is caused by adding to the database without using the insert statement and also restarts with each new session.*/
 
@@ -101,6 +102,23 @@ module.exports = {
         return cb(null, res);
       }
     });
+  },
+  cache: async (key, data, cb) => {
+    try {
+      let jsonData = JSON.stringify(data);
+      let retVal = await redis.cache(key, jsonData);
+      cb(null);
+    } catch (err) {
+      cb(err, null);
+    }
+  },
+  checkCache: async (key, cb) => {
+    try {
+      let retVal = await redis.checkCache(key);
+      let data = JSON.parse(retVal);
+      cb(null, data);
+    } catch (err) {
+      cb(err, null);
+    }
   }
-
 };
