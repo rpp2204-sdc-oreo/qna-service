@@ -1,7 +1,7 @@
 # QnA Microservice
 
 **Description**:
-This service was created in order to allow for more easily maintainable code and to serve data at a much higher rate than previously allowed by the company's API. Originally made and tested with over 10 million data entries and can provide perform with 20 ms latency up to 800 requests per second.
+This service was created in order to allow for more easily maintainable code and to serve data at a much higher rate than previously allowed by the company's API. Originally made and tested with over 10 million data entries and can perform with 20 ms latency, up to 800 requests per second.
 
 **Data**:
 Uses PostgreSQL for the main data storage as well as Redis for caching. With each product selected by a user, data for questions, those questions' answers, and any images that go along with those answers would be sent back to the client in a nested structure for easy use by the client.
